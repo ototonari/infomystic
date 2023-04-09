@@ -25,7 +25,7 @@ jobs:
         uses: w9jds/firebase-action@master
         with:
           # 全ての関数をデプロイする
-          args: deploy --only functions
+          args: deploy --project mybeats-5ee2f --only functions:askChatGPT
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           CONFIG_VALUES: ${{ secrets.CONFIG_VALUES }}
