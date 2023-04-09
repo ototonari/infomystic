@@ -9,7 +9,8 @@ admin.initializeApp();
 let openai: OpenAIApi;
 
 const startUp = async () => {
-  openai = await openAISetup();
+  const openAIKey = functions.config().open_ai.api_key;
+  openai = await openAISetup(openAIKey);
 };
 
 startUp();
@@ -60,37 +61,3 @@ export const askChatGPT = functions
 
     res.status(200).send(resultStr);
   });
-
-// // Start writing functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-
-// export const addMessage = functions.https.onRequest(async (req, res) => {
-//   // Grab the text parameter.
-//   const original = req.query.text;
-//   // Push the new message into Firestore using the Firebase Admin SDK.
-//   const writeResult = await admin
-//     .firestore()
-//     .collection("messages")
-//     .add({original: original});
-//   // Send back a message that we've successfully written the message
-//   res.json({result: `Message with ID: ${writeResult.id} added.`});
-// });
-
-// export const makeUppercase = functions.firestore
-//   .document("/messages/{documentId}")
-//   .onCreate((snap, context) => {
-//     // Grab the current value of what was written to Firestore.
-//     const original = snap.data().original as string;
-
-//     // Access the parameter `{documentId}` with `context.params`
-//     functions.logger.log("Uppercasing", context.params.documentId, original);
-
-//     const uppercase = original.toUpperCase();
-
-//     return snap.ref.set({uppercase}, {merge: true});
-//   });

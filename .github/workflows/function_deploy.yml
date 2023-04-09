@@ -22,10 +22,10 @@ jobs:
         run: npm install -C functions
       # ここからがデプロイのステップ
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+        uses: w9jds/firebase-action@v11.24.1
         with:
           # 全ての関数をデプロイする
-          args: deploy --project mybeats-5ee2f --only functions:askChatGPT
+          args: deploy --only functions
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           CONFIG_VALUES: ${{ secrets.CONFIG_VALUES }}
