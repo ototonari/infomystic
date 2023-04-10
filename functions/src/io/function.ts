@@ -9,3 +9,5 @@ export const requestHandler = functions
   })
   .https
   .onRequest;
+
+export const logger = functions.logger;
