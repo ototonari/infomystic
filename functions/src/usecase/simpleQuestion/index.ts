@@ -1,5 +1,6 @@
 import {logger} from "../../io/function";
 import {Usecase} from "../../io/requestConnector";
+import {Usecase as Usecase2} from "../../io/requestConnectorOnSlack";
 import {askOnlyOnce} from "../../models/openAI";
 
 
@@ -12,10 +13,18 @@ export const simpleQuestion: Usecase = async (req) => {
   return resultStr;
 };
 
-export const simpleQuestionOnSlack: Usecase = async (req) => {
+export const simpleQuestionOnSlack: Usecase2 = async (req) => {
   const payload = req.body;
+  logger.info("payload: ", JSON.stringify(payload));
 
-  logger.info("payload: ", payload);
+  if (payload.event.type === "app_mention") {
+    logger.info("event.type is app_mention");
+    // if (payload.event.text.includes("tell me a joke")) {
+    //     // Make call to chat.postMessage using bot's token
+    // }
+  }
 
-  return payload;
+  if (payload.event.type === "message") {
+    logger.info("event.type is message");
+  }
 };
