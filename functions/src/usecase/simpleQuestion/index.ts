@@ -1,7 +1,7 @@
 import {logger} from "../../io/function";
 import {Usecase} from "../../io/requestConnector";
 import {Usecase as Usecase2} from "../../io/requestConnectorOnSlack";
-import {askOnlyOnce} from "../../models/openAI";
+import {askToHtml, askToSlack} from "../../models/openAI/chat";
 import {getSlackClient} from "../../models/slack";
 import {trim} from "../../models/slack/message";
 
@@ -9,7 +9,7 @@ import {trim} from "../../models/slack/message";
 export const simpleQuestion: Usecase = async (req) => {
   const question = req.query["question"];
   const questionStr = JSON.stringify(question);
-  const results = await askOnlyOnce(questionStr);
+  const results = await askToHtml(questionStr);
   const resultStr = results.join("");
 
   return resultStr;
@@ -24,7 +24,7 @@ export const simpleQuestionOnSlack: Usecase2 = async (req) => {
 
     const message = trim(payload.event.text);
 
-    const results = await askOnlyOnce(message);
+    const results = await askToSlack(message);
     const resultStr = results.join("\n");
 
     await getSlackClient().chat.postMessage({
