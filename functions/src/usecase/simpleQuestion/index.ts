@@ -2,6 +2,7 @@ import {logger} from "../../io/function";
 import {Usecase} from "../../io/requestConnector";
 import {Usecase as Usecase2} from "../../io/requestConnectorOnSlack";
 import {askOnlyOnce} from "../../models/openAI";
+import {getSlackClient} from "../../models/slack";
 
 
 export const simpleQuestion: Usecase = async (req) => {
@@ -19,6 +20,11 @@ export const simpleQuestionOnSlack: Usecase2 = async (req) => {
 
   if (payload.event.type === "app_mention") {
     logger.info("event.type is app_mention");
+
+    await getSlackClient().chat.postMessage({
+      channel: payload.event.channel,
+      text: "Hello, world!",
+    });
     // if (payload.event.text.includes("tell me a joke")) {
     //     // Make call to chat.postMessage using bot's token
     // }
