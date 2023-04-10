@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 
-type Res = functions.https.Request;
+type Req = functions.https.Request;
 type RequestResponseType =
-  (req: Res, resp: functions.Response) =>
+  (req: Req, resp: functions.Response) =>
   void | Promise<void>;
 type IO = (handler: RequestResponseType) => functions.HttpsFunction;
 // type ResultType = {
@@ -12,7 +12,7 @@ type IO = (handler: RequestResponseType) => functions.HttpsFunction;
 // type ErrorMessage = {
 //   message: string
 // }
-export type Usecase = (req: Res) => string | Promise<string>;
+export type Usecase = (req: Req) => string | Promise<string>;
 
 export const requestConnector = (io: IO) => (usecase: Usecase) =>
   io(async (req, resp) => {
