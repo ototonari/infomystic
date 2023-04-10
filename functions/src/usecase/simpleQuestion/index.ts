@@ -25,11 +25,10 @@ export const simpleQuestionOnSlack: Usecase2 = async (req) => {
     const message = trim(payload.event.text);
 
     const results = await askToSlack(message);
-    const resultStr = results.join("\n");
 
     await getSlackClient().chat.postMessage({
       channel: payload.event.channel,
-      text: resultStr,
+      blocks: makeBlock(results),
       thread_ts: payload.event.ts,
     });
     // if (payload.event.text.includes("tell me a joke")) {
@@ -40,4 +39,14 @@ export const simpleQuestionOnSlack: Usecase2 = async (req) => {
   if (payload.event.type === "message") {
     logger.info("event.type is message");
   }
+};
+
+const makeBlock = (texts: string[]) => {
+  return texts.map((t) => ({
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: t,
+    },
+  }));
 };
