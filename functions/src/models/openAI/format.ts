@@ -13,21 +13,11 @@ ${text}`;
 
 export const slackMarkdownFormat = (text: string): string => {
   const t = `
-Please follow the output format and answer the following questions with example.
+Follow the output format and answer the following questions.
 
 Output format:
-1. consists of a single block from the Slack Block Kit.
-2. the text is organized in an easy-to-read format.
-3. The text is written in Japanese.
-
-Example output:
-{
-  "type": "section",
-  "text": {
-    "type": "mrkdwn",
-    "text": "New Paid Time Off request from <example.com|Fred Enriquez>\n\n<https://example.com|View request>"
-  }
-}
+1. think step by step.
+2. The text is written in Japanese.
 
 Questions:
 ${text}`;
