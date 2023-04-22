@@ -19,11 +19,15 @@ const isRetry = (req: Req): boolean => {
 
 export const requestConnectorOnSlack = (io: IO) => (usecase: SlackUsecase) =>
   io(async (req, resp) => {
-    resp.sendStatus(200);
-    if (isRetry(req)) return;
-    try {
-      await usecase(req);
-    } catch (error) {
-      functions.logger.error("Error: ", error);
+    if (req.body.type !== "url_verification") {
+      resp.sendStatus(200);
+      if (isRetry(req)) return;
+      try {
+        await usecase(req);
+      } catch (error) {
+        functions.logger.error("Error: ", error);
+      }
+    } else {
+      resp.send(req.body.challenge);
     }
   });
