@@ -13,17 +13,17 @@ export const conversationChatOnSlack: SlackUsecase = async (req) => {
   logger.info("payload: ", JSON.stringify(payload));
 
   if (payload.event.type === "app_mention") {
-    const {channelID, user} = payload.event;
+    const {channel, user} = payload.event;
     const prompt = slackMarkdownFormat(trim(payload.event.text));
 
     const slackHistoryDao = new SlackHistoryDao(getFirestoreDB());
-    const prevMessages = await slackHistoryDao.FindBySlackChannel(user, channelID)
+    const prevMessages = await slackHistoryDao.FindBySlackChannel(user, channel)
 
     const openai = getOpenAI();
     const mllm = new MemorizedConversation(openai, prevMessages);
     const result = await mllm.ask(prompt);
 
-    await slackHistoryDao.StoreBySlackChannel(user, channelID, [
+    await slackHistoryDao.StoreBySlackChannel(user, channel, [
       {role: "user", content: prompt},
       {role: "assistant", content: result},
     ]);
