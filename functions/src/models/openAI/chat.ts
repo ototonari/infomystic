@@ -43,9 +43,9 @@ export const askToSlack = async (text: string): Promise<string[]> => {
 export class MemorizedConversation {
   client: OpenAIApi;
   messages: ChatCompletionRequestMessage[];
-  constructor(openAI: OpenAIApi) {
+  constructor(openAI: OpenAIApi, prevMessages: ChatCompletionRequestMessage[] = []) {
     this.client = openAI;
-    this.messages = [];
+    this.messages = prevMessages;
   }
   private prepareMessages = (prompt: string): ChatCompletionRequestMessage[] => {
     return [

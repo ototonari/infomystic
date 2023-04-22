@@ -1,6 +1,6 @@
 import {logger} from "../../io/function";
 import {WebUsecase} from "../../io/requestConnector";
-import {SlackUsecase as Usecase2} from "../../io/requestConnectorOnSlack";
+import {SlackUsecase} from "../../io/requestConnectorOnSlack";
 import {askToHtml, askToSlack} from "../../models/openAI/chat";
 import {getSlackClient} from "../../models/slack";
 import {trim} from "../../models/slack/message";
@@ -15,7 +15,7 @@ export const simpleQuestion: WebUsecase = async (req) => {
   return resultStr;
 };
 
-export const simpleQuestionOnSlack: Usecase2 = async (req) => {
+export const simpleQuestionOnSlack: SlackUsecase = async (req) => {
   const payload = req.body;
   logger.info("payload: ", JSON.stringify(payload));
 
@@ -31,9 +31,6 @@ export const simpleQuestionOnSlack: Usecase2 = async (req) => {
       blocks: makeBlock(results),
       thread_ts: payload.event.ts,
     });
-    // if (payload.event.text.includes("tell me a joke")) {
-    //     // Make call to chat.postMessage using bot's token
-    // }
   }
 
   if (payload.event.type === "message") {
