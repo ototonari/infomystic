@@ -4,6 +4,7 @@ import {simpleQuestion, simpleQuestionOnSlack} from "./usecase/simpleQuestion";
 import {helloWorld} from "./usecase/test";
 import {requestConnectorOnSlack} from "./io/requestConnectorOnSlack";
 import {startup} from "./startup";
+import { conversationChatOnSlack } from "./usecase/conversationChat";
 
 startup();
 
@@ -13,3 +14,4 @@ export const test = defaultConnector(helloWorld);
 
 const slackConnector = requestConnectorOnSlack(requestHandler);
 export const askQuestion = slackConnector(simpleQuestionOnSlack);
+export const conversationChat = slackConnector(conversationChatOnSlack);
