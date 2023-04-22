@@ -1,6 +1,6 @@
-import {ChatCompletionRequestMessage} from "openai";
+import {ChatCompletionRequestMessage, OpenAIApi} from "openai";
 import {getOpenAI} from ".";
-import {htmlFormat, slackMarkdownFormat} from "./format";
+import { htmlFormat, slackMarkdownFormat } from "./format";
 
 export const askToHtml = async (text: string): Promise<string[]> => {
   const openai = getOpenAI();
@@ -39,3 +39,57 @@ export const askToSlack = async (text: string): Promise<string[]> => {
 
   return contents.filter((value) => value !== null) as string[];
 };
+
+export class MemorizedConversation {
+  client: OpenAIApi;
+  messages: ChatCompletionRequestMessage[];
+  constructor(openAI: OpenAIApi) {
+    this.client = openAI;
+    this.messages = [];
+  }
+  private prepareMessages = (prompt: string): ChatCompletionRequestMessage[] => {
+    return [
+      {role: "system", content: "You are a helpful assistant."},
+      ...this.messages,
+      {role: "user", content: prompt},
+    ]
+  }
+  private saveMessage = (prompt: string, answer: string) => {
+    const newMessages: ChatCompletionRequestMessage[] = [
+      ...this.messages,
+      {role: "user", content: prompt},
+      {role: "assistant", content: answer},
+    ];
+
+    this.messages = newMessages;
+  }
+
+  public ask = async (prompt: string): Promise<string> => {
+    const messages = this.prepareMessages(prompt);
+    console.log("debug, pre messages: ", messages);
+
+    const completion = await this.client.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: messages,
+    });
+    const answer = completion.data.choices
+      .map((c) => c.message?.content).join("");
+
+    this.saveMessage(prompt, answer);
+    console.log("debug, suff messages: ", this.messages);
+    return answer;
+  }
+}
+
+export const singleChatCompletion = async (openAI: OpenAIApi, prompt: string): Promise<string> => {
+  const completion = await openAI.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {role: "system", content: "You are a helpful assistant."},
+      {role: "user", content: prompt}
+    ],
+  });
+
+  return completion.data.choices
+    .map((c) => c.message?.content).join("");
+}

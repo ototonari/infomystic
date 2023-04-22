@@ -12,9 +12,9 @@ type IO = (handler: RequestResponseType) => functions.HttpsFunction;
 // type ErrorMessage = {
 //   message: string
 // }
-export type Usecase = (req: Req) => string | Promise<string>;
+export type WebUsecase = (req: Req) => string | Promise<string>;
 
-export const requestConnector = (io: IO) => (usecase: Usecase) =>
+export const requestConnector = (io: IO) => (usecase: WebUsecase) =>
   io(async (req, resp) => {
     try {
       const data = await usecase(req);

@@ -6,7 +6,7 @@ type RequestResponseType =
   void | Promise<void>;
 type IO = (handler: RequestResponseType) => functions.HttpsFunction;
 
-export type Usecase = (req: Req) => void | Promise<void>;
+export type SlackUsecase = (req: Req) => void | Promise<void>;
 
 const isRetry = (req: Req): boolean => {
   if (req.headers["X-Slack-Retry-Num"] &&
@@ -17,7 +17,7 @@ const isRetry = (req: Req): boolean => {
   }
 };
 
-export const requestConnectorOnSlack = (io: IO) => (usecase: Usecase) =>
+export const requestConnectorOnSlack = (io: IO) => (usecase: SlackUsecase) =>
   io(async (req, resp) => {
     resp.sendStatus(200);
     if (isRetry(req)) return;

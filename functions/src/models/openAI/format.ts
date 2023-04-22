@@ -16,8 +16,7 @@ export const slackMarkdownFormat = (text: string): string => {
 Follow the output format and answer the following questions.
 
 Output format:
-1. think step by step.
-2. The text is written in Japanese.
+1. Output language is Japanese.
 
 Questions:
 ${text}`;

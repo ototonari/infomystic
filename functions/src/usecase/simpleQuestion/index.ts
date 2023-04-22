@@ -1,12 +1,12 @@
 import {logger} from "../../io/function";
-import {Usecase} from "../../io/requestConnector";
-import {Usecase as Usecase2} from "../../io/requestConnectorOnSlack";
+import {WebUsecase} from "../../io/requestConnector";
+import {SlackUsecase as Usecase2} from "../../io/requestConnectorOnSlack";
 import {askToHtml, askToSlack} from "../../models/openAI/chat";
 import {getSlackClient} from "../../models/slack";
 import {trim} from "../../models/slack/message";
 
 
-export const simpleQuestion: Usecase = async (req) => {
+export const simpleQuestion: WebUsecase = async (req) => {
   const question = req.query["question"];
   const questionStr = JSON.stringify(question);
   const results = await askToHtml(questionStr);
