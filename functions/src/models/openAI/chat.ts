@@ -66,7 +66,7 @@ export class MemorizedConversation {
 
   public ask = async (prompt: string): Promise<string> => {
     const messages = this.prepareMessages(prompt);
-    console.log("debug, pre messages: ", messages);
+    // console.log("debug, pre messages: ", messages);
 
     const completion = await this.client.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -76,7 +76,7 @@ export class MemorizedConversation {
       .map((c) => c.message?.content).join("");
 
     this.saveMessage(prompt, answer);
-    console.log("debug, suff messages: ", this.messages);
+    // console.log("debug, suff messages: ", this.messages);
     return answer;
   }
 }
