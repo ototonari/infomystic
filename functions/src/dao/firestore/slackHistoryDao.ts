@@ -15,6 +15,7 @@ interface ISlackHistoryDao {
 
 export class SlackHistoryDao implements ISlackHistoryDao {
   private client: Firestore
+  private stockCount = 16;
   constructor(client: Firestore) {
     this.client = client;
   }
@@ -36,7 +37,7 @@ export class SlackHistoryDao implements ISlackHistoryDao {
               ...partialMessages,
             ];
             // newMessages の 最新10件を取得する
-            const latestMessages = newMessages.slice(-10);
+            const latestMessages = newMessages.slice(- this.stockCount);
             t.set(ref, { [channelID]: latestMessages });
             return;
           } else {
