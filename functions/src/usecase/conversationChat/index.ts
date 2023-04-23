@@ -5,7 +5,6 @@ import { logger } from "../../io/function";
 import { SlackUsecase } from "../../io/requestConnectorOnSlack";
 import { getOpenAI } from "../../models/openAI";
 import { MemorizedConversation } from "../../models/openAI/chat";
-import { slackMarkdownFormat } from "../../models/openAI/format";
 import { getSlackClient } from "../../models/slack";
 import { trim, wrapMarkDownText } from "../../models/slack/message";
 
@@ -20,7 +19,7 @@ export const conversationChatOnSlack: SlackUsecase<AppMentionEvent> = async (
 
   if (!user) return;
 
-  const prompt = slackMarkdownFormat(trim(payload.event.text));
+  const prompt = trim(payload.event.text);
 
   const slackHistoryDao = new SlackHistoryDao(getFirestoreDB());
   const prevMessages = await slackHistoryDao.FindBySlackChannel(
