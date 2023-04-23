@@ -1,5 +1,6 @@
 import { Firestore } from "firebase-admin/firestore";
 import { ChatCompletionRequestMessage } from "openai";
+import { logger } from "../../io/function";
 
 const collectionName = "SlackHistory";
 
@@ -13,7 +14,7 @@ interface ISlackHistoryDao {
 }
 
 export class SlackHistoryDao implements ISlackHistoryDao {
-  client: Firestore
+  private client: Firestore
   constructor(client: Firestore) {
     this.client = client;
   }
@@ -22,6 +23,8 @@ export class SlackHistoryDao implements ISlackHistoryDao {
     const ref = this.client.collection(collectionName).doc(userID);
 
     try {
+      const start = new Date();
+
       await this.client.runTransaction(async t => {
         const doc = await t.get(ref);
         if (!doc.exists) {
@@ -43,15 +46,26 @@ export class SlackHistoryDao implements ISlackHistoryDao {
             return;
           }
         }
-      })
+      });
+
+      const end = new Date();
+      const elapsedSec = Math.floor(start.getTime() - end.getTime() / 1000);
+      logger.log("StoreBySlackChannel: ", elapsedSec, " [sec]");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
     }
   }
 
   FindBySlackChannel = async (userID: string, channelID: string) => {
+    const start = new Date();
+
     const ref = this.client.collection(collectionName).doc(userID);
     const doc = await ref.get();
+
+    const end = new Date();
+    const elapsedSec = Math.floor(start.getTime() - end.getTime() / 1000);
+    logger.log("FindBySlackChannel: ", elapsedSec, " [sec]");
+
     if (!doc.exists) {
       return [];
     } else {
