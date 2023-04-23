@@ -23,8 +23,6 @@ export class SlackHistoryDao implements ISlackHistoryDao {
     const ref = this.client.collection(collectionName).doc(userID);
 
     try {
-      const start = new Date();
-
       await this.client.runTransaction(async t => {
         const doc = await t.get(ref);
         if (!doc.exists) {
@@ -47,25 +45,15 @@ export class SlackHistoryDao implements ISlackHistoryDao {
           }
         }
       });
-
-      const end = new Date();
-      const elapsedSec = Math.floor(start.getTime() - end.getTime() / 1000);
-      logger.log("StoreBySlackChannel: ", elapsedSec, " [sec]");
     } catch (error) {
       logger.error(error);
     }
   }
 
   FindBySlackChannel = async (userID: string, channelID: string) => {
-    const start = new Date();
-
     const ref = this.client.collection(collectionName).doc(userID);
+
     const doc = await ref.get();
-
-    const end = new Date();
-    const elapsedSec = Math.floor(start.getTime() - end.getTime() / 1000);
-    logger.log("FindBySlackChannel: ", elapsedSec, " [sec]");
-
     if (!doc.exists) {
       return [];
     } else {
