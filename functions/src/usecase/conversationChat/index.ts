@@ -32,11 +32,6 @@ export const conversationChatOnSlack: SlackUsecase<AppMentionEvent> = async (
   const mllm = new MemorizedConversation(openai, prevMessages);
   const result = await mllm.ask(prompt);
 
-  await slackHistoryDao.StoreBySlackChannel(user, channel, [
-    { role: "user", content: prompt },
-    { role: "assistant", content: result },
-  ]);
-
   await getSlackClient().chat.postMessage({
     channel: payload.event.channel,
     blocks: makeBlock([result]),
@@ -44,6 +39,10 @@ export const conversationChatOnSlack: SlackUsecase<AppMentionEvent> = async (
     reply_broadcast: true,
   });
 
+  slackHistoryDao.StoreBySlackChannel(user, channel, [
+    { role: "user", content: prompt },
+    { role: "assistant", content: result },
+  ]);
 };
 
 const makeBlock = (texts: string[]) => {
