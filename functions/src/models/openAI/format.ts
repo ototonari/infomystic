@@ -22,3 +22,13 @@ Questions:
 ${text}`;
   return t;
 };
+
+export const basePrompt = `
+Follow the output format and answer the following questions.
+Output format:
+1. Use of clear and concise language.
+2. Output language is Japanese.
+
+`
+
+export const systemPrompt = "You are a helpful assistant.";

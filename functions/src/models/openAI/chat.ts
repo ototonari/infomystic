@@ -1,6 +1,8 @@
 import {ChatCompletionRequestMessage, OpenAIApi} from "openai";
 import {getOpenAI} from ".";
-import { htmlFormat, slackMarkdownFormat } from "./format";
+import { htmlFormat, slackMarkdownFormat, basePrompt, systemPrompt } from "./format";
+
+const firstUserPrompt = {role: "user", content: basePrompt };
 
 export const askToHtml = async (text: string): Promise<string[]> => {
   const openai = getOpenAI();
@@ -49,7 +51,8 @@ export class MemorizedConversation {
   }
   private prepareMessages = (prompt: string): ChatCompletionRequestMessage[] => {
     return [
-      {role: "system", content: "You are a helpful assistant."},
+      {role: "system", content: systemPrompt},
+      {role: "user", content: basePrompt},
       ...this.messages,
       {role: "user", content: prompt},
     ]
