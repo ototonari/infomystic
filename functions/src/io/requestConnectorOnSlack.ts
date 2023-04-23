@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import {EnvelopedEvent, SlackEvent} from "@slack/bolt";
+import {BasicSlackEvent, EnvelopedEvent} from "@slack/bolt";
 
 type Req = functions.https.Request;
 type RequestResponseType =
@@ -7,7 +7,7 @@ type RequestResponseType =
   void | Promise<void>;
 type IO = (handler: RequestResponseType) => functions.HttpsFunction;
 
-export type SlackUsecase<T extends SlackEvent> = (req: EnvelopedEvent<T>) => void | Promise<void>;
+export type SlackUsecase<T extends BasicSlackEvent> = (req: EnvelopedEvent<T>) => void | Promise<void>;
 
 const isRetry = (req: Req): boolean => {
   if (req.headers["X-Slack-Retry-Num"] &&
@@ -18,7 +18,7 @@ const isRetry = (req: Req): boolean => {
   }
 };
 
-export const requestConnectorOnSlack = (io: IO) => (usecase: SlackUsecase<SlackEvent>) =>
+export const requestConnectorOnSlack = (io: IO) => <T extends BasicSlackEvent>(usecase: SlackUsecase<T>) =>
   io(async (req, resp) => {
     if (req.body.type !== "url_verification") {
       resp.sendStatus(200);
