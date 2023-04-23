@@ -7,7 +7,7 @@ import { getOpenAI } from "../../models/openAI";
 import { MemorizedConversation } from "../../models/openAI/chat";
 import { slackMarkdownFormat } from "../../models/openAI/format";
 import { getSlackClient } from "../../models/slack";
-import { trim } from "../../models/slack/message";
+import { trim, wrapMarkDownText } from "../../models/slack/message";
 
 export const conversationChatOnSlack: SlackUsecase<AppMentionEvent> = async (
   payload
@@ -34,7 +34,7 @@ export const conversationChatOnSlack: SlackUsecase<AppMentionEvent> = async (
 
   await getSlackClient().chat.postMessage({
     channel: payload.event.channel,
-    blocks: makeBlock([result]),
+    text: wrapMarkDownText(result),
     thread_ts: payload.event.ts,
     reply_broadcast: true,
   });
@@ -45,12 +45,12 @@ export const conversationChatOnSlack: SlackUsecase<AppMentionEvent> = async (
   ]);
 };
 
-const makeBlock = (texts: string[]) => {
-  return texts.map((t) => ({
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text: t,
-    },
-  }));
-};
+// const makeBlock = (texts: string[]) => {
+//   return texts.map((t) => ({
+//     type: "section",
+//     text: {
+//       type: "mrkdwn",
+//       text: t,
+//     },
+//   }));
+// };

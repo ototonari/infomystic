@@ -1,6 +1,7 @@
 import { getOpenAI } from "../models/openAI";
 import { MemorizedConversation } from "../models/openAI/chat";
 import { getSlackClient } from "../models/slack";
+import { wrapMarkDownText } from "../models/slack/message";
 import { startup } from "../startup";
 
 const SlackOptions = {
@@ -20,7 +21,7 @@ const integrationTest = async () => {
 const postMessage = () => {
   return getSlackClient().chat.postMessage({
     channel: SlackOptions.channel,
-    text: texts.markDown
+    text: wrapMarkDownText("Hello world!")
   });
 }
 
