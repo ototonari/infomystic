@@ -33,9 +33,9 @@ export const conversationChatOnSlack: SlackUsecase<AppMentionEvent> = async (
 
   await getSlackClient().chat.postMessage({
     channel: payload.event.channel,
-    text: wrapMarkDownText(result),
+    text: result,
     thread_ts: payload.event.ts,
-    reply_broadcast: true,
+    reply_broadcast: false,
   });
 
   slackHistoryDao.StoreBySlackChannel(user, channel, [

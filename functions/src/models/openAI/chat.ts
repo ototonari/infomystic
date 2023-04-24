@@ -52,7 +52,7 @@ export class MemorizedConversation {
   private prepareMessages = (prompt: string): ChatCompletionRequestMessage[] => {
     return [
       {role: "system", content: systemPrompt},
-      {role: "user", content: basePrompt},
+      // {role: "user", content: basePrompt},
       ...this.messages,
       {role: "user", content: prompt},
     ]
